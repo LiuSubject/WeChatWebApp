@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+
+    <!-- 配置mysql 驱动jar包路径.用了绝对路径 -->
+    <classPathEntry location="E:\code\java\lib\myadd\mysql-connector-java-5.0.8-bin.jar" />
+
+    <context id="ShaoXing7thHosp" targetRuntime="MyBatis3">
+
+        <!-- 不生成注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+            <property name="suppressDate" value="true" />
+        </commentGenerator>
+        <!-- 注释控制完毕 -->
+
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/sxqy_info_maint_test"
+                        userId="root"
+                        password="admin">
+        </jdbcConnection>
+
+        <!-- 非必需，类型处理器，在数据库类型和java类型之间的转换控制-->
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- 数据表对应的model 层  -->
+        <javaModelGenerator targetPackage="com.system.po" targetProject="src/main/java">
+
+            <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
+            <property name="enableSubPackages" value="false"/>
+
+            <!-- 是否对类CHAR类型的列的数据进行trim操作 -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- sql mapper 隐射配置文件 -->
+        <sqlMapGenerator targetPackage="com.system.mapper"  targetProject="src/main/java">
+            <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- 在ibatis2 中是dao层，但在mybatis3中，其实就是mapper接口 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.system.mapper"  targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!-- 配置表
+            schema：不用填写
+            tableName: 表名
+            enableCountByExample、enableSelectByExample、enableDeleteByExample、enableUpdateByExample、selectByExampleQueryId：
+            去除自动生成的例子
+        -->
+
+        <table schema="" tableName="software_requirements">
+        </table>
+
+
+    </context>
+</generatorConfiguration>

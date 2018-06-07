@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.system.mapper.ComputerProblemsMapperCustom" >
+
+  <resultMap id="BaseResultMap" type="com.system.po.ComputerProblems" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="dept" property="dept" jdbcType="VARCHAR" />
+    <result column="departCode" property="departcode" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="detail" property="detail" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="type_secondary" property="typeSecondary" jdbcType="INTEGER" />
+    <result column="leader" property="leader" jdbcType="VARCHAR" />
+    <result column="leader_name" property="leaderName" jdbcType="VARCHAR" />
+    <result column="reback" property="reback" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="done_time" property="doneTime" jdbcType="VARCHAR" />
+    <result column="feedback_content_1" property="feedbackContent1" jdbcType="VARCHAR" />
+    <result column="feedback_id_1" property="feedbackId1" jdbcType="CHAR" />
+    <result column="feedback_name_1" property="feedbackName1" jdbcType="VARCHAR" />
+    <result column="feedback_content_2" property="feedbackContent2" jdbcType="VARCHAR" />
+    <result column="feedback_id_2" property="feedbackId2" jdbcType="CHAR" />
+    <result column="feedback_name_2" property="feedbackName2" jdbcType="VARCHAR" />
+    <result column="feedback_content_3" property="feedbackContent3" jdbcType="VARCHAR" />
+    <result column="feedback_id_3" property="feedbackId3" jdbcType="CHAR" />
+    <result column="feedback_name_3" property="feedbackName3" jdbcType="VARCHAR" />
+    <result column="feedback_content_4" property="feedbackContent4" jdbcType="VARCHAR" />
+    <result column="feedback_id_4" property="feedbackId4" jdbcType="CHAR" />
+    <result column="feedback_name_4" property="feedbackName4" jdbcType="VARCHAR" />
+    <result column="feedback_content_5" property="feedbackContent5" jdbcType="VARCHAR" />
+    <result column="feedback_id_5" property="feedbackId5" jdbcType="CHAR" />
+    <result column="feedback_name_5" property="feedbackName5" jdbcType="VARCHAR" />
+    <result column="fault_urgent" property="faultUrgent" jdbcType="INTEGER" />
+    <result column="feedback_time_1" property="feedbackTime1" jdbcType="VARCHAR" />
+    <result column="feedback_time_2" property="feedbackTime2" jdbcType="VARCHAR" />
+    <result column="feedback_time_3" property="feedbackTime3" jdbcType="VARCHAR" />
+    <result column="feedback_time_4" property="feedbackTime4" jdbcType="VARCHAR" />
+    <result column="feedback_time_5" property="feedbackTime5" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="findByPaging" parameterType="PagingVO" resultMap="BaseResultMap">
+    select computer_problems.*
+    from computer_problems
+    ORDER by create_time desc, flag asc
+    limit #{toPageNo}, #{pageSize}
+  </select>
+  <select id="deptFindByPaging" parameterType="map" resultMap="BaseResultMap">
+    select computer_problems.*
+    from computer_problems
+    WHERE departcode LIKE concat(concat('%',#{deptName}),'%')
+    ORDER by create_time desc, flag asc
+    limit #{pagingVO.toPageNo}, #{pagingVO.pageSize}
+  </select>
+  <select id="findGroupByPaging" parameterType="map" resultMap="BaseResultMap">
+    select computer_problems.*
+    from computer_problems
+    WHERE type = #{groupType}
+    ORDER by create_time desc, flag asc
+    limit #{pagingVO.toPageNo}, #{pagingVO.pageSize}
+  </select>
+  <select id="findComplexGroupByPaging" parameterType="map" resultMap="BaseResultMap">
+    select computer_problems.* from computer_problems
+    <where>
+      <if test="hardware != null and hardware == 1">
+        AND type = 1
+      </if>
+      <if test="software != null and software == 1">
+        OR type = 2
+      </if>
+      <if test="fee != null and fee == 1">
+        OR type = 3
+      </if>
+    </where>
+    ORDER by create_time desc, flag asc
+    limit #{pagingVO.toPageNo}, #{pagingVO.pageSize}
+  </select>
+  <select id="getCountComplexGroupComputerProblems" parameterType="map" resultType="java.lang.Integer">
+    select COUNT(computer_problems.id) from computer_problems
+    <where>
+      <if test="hardware != null and hardware == 1">
+        AND type = 1
+      </if>
+      <if test="software != null and software == 1">
+        OR type = 2
+      </if>
+      <if test="fee != null and fee == 1">
+        OR type = 3
+      </if>
+    </where>
+  </select>
+  <select id="paginationOfSearchResults" parameterType="map" resultMap="BaseResultMap">
+  select computer_problems.* from computer_problems
+    <where>
+    <if test="dept != null and dept != ''">
+      AND dept LIKE concat(concat('%',#{dept}),'%')
+    </if>
+    <if test="name != null and name != ''">
+      AND name LIKE concat(concat('%',#{name}),'%')
+    </if>
+    <if test="flag == 0 or flag == 1 or flag == 2" >
+      AND flag = #{flag}
+    </if>
+  </where>
+  ORDER by create_time desc, flag asc
+  </select>
+  <select id="paginationOfgGroupSearchResults" parameterType="map" resultMap="BaseResultMap">
+    select computer_problems.* from computer_problems
+      <where>
+        <if test="flag == 0 or flag == 1 or flag == 2">
+          AND flag = #{flag}
+        </if>
+        <if test="dept != null and dept != ''">
+          AND dept LIKE concat(concat('%',#{dept}),'%')
+        </if>
+        <if test="name != null and name != ''">
+          AND name LIKE concat(concat('%',#{name}),'%')
+        </if>
+        <if test="groupType == 1 or groupType == 2 or groupType == 3" >
+          AND type = #{groupType}
+        </if>
+      </where>
+    ORDER by create_time desc, flag asc
+  </select>
+
+  <select id="paginationOfComplexgGroupSearchResults" parameterType="map" resultMap="BaseResultMap">
+    select computer_problems.* from computer_problems
+    <where>
+      <if test="flag == 0 or flag == 1 or flag == 2">
+        AND flag = #{flag}
+      </if>
+      <if test="dept != null and dept != ''">
+        AND dept LIKE concat(concat('%',#{dept}),'%')
+      </if>
+      <if test="name != null and name != ''">
+        AND name LIKE concat(concat('%',#{name}),'%')
+      </if>
+      <if test="hardware != null and hardware == 0">
+        AND type != 1
+      </if>
+      <if test="software != null and software == 0">
+        AND type != 2
+      </if>
+      <if test="fee != null and fee == 0">
+        AND type != 3
+      </if>
+    </where>
+    ORDER by create_time desc, flag asc
+  </select>
+
+</mapper>
